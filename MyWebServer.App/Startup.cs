@@ -16,6 +16,7 @@
             .MapGet<CatsController>("/Cats/Create", c => c.Create())
             .MapGet<CatsController>("/Cats/Save", c => c.Save()))
             .Start();
+        // for test only
 
     }
 }
