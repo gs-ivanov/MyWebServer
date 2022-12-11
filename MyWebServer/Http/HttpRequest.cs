@@ -7,6 +7,7 @@
     public class HttpRequest
     {
         private const string NewLine = "\r\n";
+
         public HttpMethod Method { get; private set; }
 
         public string Path { get; private set; }
@@ -46,7 +47,7 @@
                 Query = query,
                 Headers = headers,
                 Body = body,
-                Form = form,
+                Form = form
             };
         }
 
@@ -71,7 +72,6 @@
 
             return (path, query);
         }
-
         private static Dictionary<string, string> ParseQuery(string queryString)
             => queryString
             .Split('&')

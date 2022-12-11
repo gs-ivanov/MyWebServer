@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-namespace MyWebServer.Http
+﻿namespace MyWebServer.Http
 {
+using System.Collections;
+using System.Collections.Generic;
     public class HttpHeaderCollection : IEnumerable<HttpHeader>
     {
 

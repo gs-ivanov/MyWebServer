@@ -22,8 +22,6 @@
         public string Value { get; init; }
 
         public override string ToString()
-        {
-            return $"{this.Name}: {this.Value}";
-        }
+            => $"{this.Name}: {this.Value}";
     }
 }
