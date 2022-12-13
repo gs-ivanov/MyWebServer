@@ -18,6 +18,8 @@
 
         public IReadOnlyDictionary<string, HttpHeader> Headers { get; private set; }
 
+        public IReadOnlyDictionary<string, HttpCookie> Cookies { get; private set; }
+
         public string Body { get; private set; }
 
         public static HttpRequest Parse(string request)
@@ -27,7 +29,7 @@
             var startLine = lines.First().Split(" ");
 
             var method = ParseHttpMethod(startLine[0]);
-
+            
             var url = startLine[1];
 
             var (path, query) = ParseUrl(url);
