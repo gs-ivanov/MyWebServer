@@ -10,16 +10,16 @@
             string path,
             Func<TController, HttpResponse> controllerFunction)
             where TController : Controller
-            => routingTable.MapGet(path, HttpRequest => controllerFunction(
-                CreateController<TController>(HttpRequest)));
+            => routingTable.MapGet(path, request => controllerFunction(
+                CreateController<TController>(request)));
 
         public static IRoutingTable MapPost<TController>(
             this IRoutingTable routingTable,
             string path,
             Func<TController, HttpResponse> controllerFunction)
             where TController : Controller
-            => routingTable.MapPost(path, HttpRequest => controllerFunction(
-                CreateController<TController>(HttpRequest)));
+            => routingTable.MapPost(path, request => controllerFunction(
+                CreateController<TController>(request)));
 
 
 

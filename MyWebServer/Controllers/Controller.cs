@@ -1,7 +1,6 @@
 ﻿namespace MyWebServer.Controllers
 {
     using MyWebServer.Http;
-    using MyWebServer.Responses;
     using MyWebServer.Results;
     using System.Runtime.CompilerServices;
 
@@ -19,22 +18,22 @@
         protected HttpResponse Response { get; private init; }
 
         protected ActionResult Text(string text)
-            => new TextResult(this.Response,text);
+            => new TextResult(this.Response, text);
 
-        protected HtmlResponse Html(string html)
-            => new HtmlResponse(html);
+        protected ActionResult Html(string html)
+            => new HtmlResult(this.Response, html);
 
-        protected HttpResponse Redirect(string location)
-            => new RedirectResponse(location);
+        protected ActionResult Redirect(string location)
+            => new RedirectResult(this.Response, location);
 
-        protected HttpResponse View([CallerMemberName] string viewName = "")
-            => new ViewResponse(viewName, this.GetControllerName(), null);
+        protected ActionResult View([CallerMemberName] string viewName = "")
+            => new ViewResult(this.Response, viewName, this.GetControllerName(), null);
 
-        protected HttpResponse View(string viewName, object model)
-                   => new ViewResponse(viewName, this.GetControllerName(), model);
+        protected ActionResult View(string viewName, object model)
+                   => new ViewResult(this.Response, viewName, this.GetControllerName(), model);
 
-        protected HttpResponse View(object model,[CallerMemberName] string viewName="")
-                   => new ViewResponse(viewName, this.GetControllerName(), model);
+        protected ActionResult View(object model, [CallerMemberName] string viewName = "")
+                   => new ViewResult(this.Response, viewName, this.GetControllerName(), model);
 
         private string GetControllerName()
             => this.GetType().Name

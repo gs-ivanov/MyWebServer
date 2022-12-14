@@ -2,9 +2,9 @@
 {
     using MyWebServer.Controllers;
     using MyWebServer.Http;
-    public class AccountComtroller : Controller
+    public class AccountController : Controller
     {
-        public AccountComtroller(HttpRequest request)
+        public AccountController(HttpRequest request)
             : base(request)
         {
         }
