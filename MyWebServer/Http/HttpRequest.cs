@@ -6,6 +6,8 @@
 
     public class HttpRequest
     {
+        private static Dictionary<string, HttpSession> Sessions = new();
+
         private const string NewLine = "\r\n";
 
         public HttpMethod Method { get; private set; }
@@ -14,13 +16,15 @@
 
         public IReadOnlyDictionary<string, string> Query { get; private set; }
 
-        public IReadOnlyDictionary<string, string> Form { get; private set; }
-
         public IReadOnlyDictionary<string, HttpHeader> Headers { get; private set; }
 
         public IReadOnlyDictionary<string, HttpCookie> Cookies { get; private set; }
 
+        public IReadOnlyDictionary<string, string> Form { get; private set; }
+
         public string Body { get; private set; }
+
+        public HttpSession Session { get; private set; }
 
         public static HttpRequest Parse(string request)
         {
@@ -29,14 +33,17 @@
             var startLine = lines.First().Split(" ");
 
             var method = ParseHttpMethod(startLine[0]);
-            
             var url = startLine[1];
 
             var (path, query) = ParseUrl(url);
 
-            var headers = ParseHttpHeaders(lines.Skip(1));
+            var headers = ParseHeaders(lines.Skip(1));
 
-            var bodyLines = lines.Skip(headers.Count).ToArray();
+            var cookies = ParseCookies(headers);
+
+            var session = GetSession(cookies);
+
+            var bodyLines = lines.Skip(headers.Count + 2).ToArray();
 
             var body = string.Join(NewLine, bodyLines);
 
@@ -48,9 +55,17 @@
                 Path = path,
                 Query = query,
                 Headers = headers,
+                Cookies = cookies,
+                Session = session,
                 Body = body,
                 Form = form
             };
+        }
+
+        public override string ToString()
+        {
+            // todo;
+            return null;
         }
 
         private static HttpMethod ParseHttpMethod(string method)
@@ -60,7 +75,7 @@
                 "POST" => HttpMethod.Post,
                 "PUT" => HttpMethod.Put,
                 "DELETE" => HttpMethod.Delete,
-                _ => throw new InvalidOperationException($"Method '{method}' is not supported")
+                _ => throw new InvalidOperationException($"Method '{method}' is not supported"),
             };
 
         private static (string, Dictionary<string, string>) ParseUrl(string url)
@@ -74,6 +89,7 @@
 
             return (path, query);
         }
+
         private static Dictionary<string, string> ParseQuery(string queryString)
             => queryString
             .Split('&')
@@ -81,7 +97,7 @@
             .Where(part => part.Length == 2)
             .ToDictionary(part => part[0], part => part[1]);
 
-        private static Dictionary<string, HttpHeader> ParseHttpHeaders(IEnumerable<string> headerLines)
+        private static Dictionary<string, HttpHeader> ParseHeaders(IEnumerable<string> headerLines)
         {
             var headerCollection = new Dictionary<string, HttpHeader>();
 
@@ -108,6 +124,45 @@
             return headerCollection;
         }
 
+        private static Dictionary<string, HttpCookie> ParseCookies(Dictionary<string, HttpHeader> headers)
+        {
+            var cookieCollection = new Dictionary<string, HttpCookie>();
+
+            if (headers.ContainsKey(HttpHeader.Cookie))
+            {
+                var cookieHeader = headers[HttpHeader.Cookie];
+
+                var allCookies = cookieHeader.Value.Split(';');
+
+                foreach (var cookieText in allCookies)
+                {
+                    var cookieParts = cookieText.Split('=');
+
+                    var cookieName = cookieParts[0].Trim();
+                    var cookieValue = cookieParts[1].Trim();
+
+                    var cookie = new HttpCookie(cookieName, cookieValue);
+
+                    cookieCollection.Add(cookieName, cookie);
+                }
+            }
+
+            return cookieCollection;
+        }
+
+        private static HttpSession GetSession(Dictionary<string, HttpCookie> cookies)
+        {
+            var sessionId = cookies.ContainsKey(HttpSession.SessionCookieName)
+                ? cookies[HttpSession.SessionCookieName].Value
+                : Guid.NewGuid().ToString();
+
+            if (!Sessions.ContainsKey(sessionId))
+            {
+                Sessions[sessionId] = new HttpSession(sessionId);
+            }
+
+            return Sessions[sessionId];
+        }
         private static Dictionary<string, string> ParseForm(Dictionary<string, HttpHeader> headers, string body)
         {
             var result = new Dictionary<string, string>();

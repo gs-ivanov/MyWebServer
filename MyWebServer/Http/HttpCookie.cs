@@ -3,7 +3,7 @@
     using MyWebServer.Common;
     public class HttpCookie
     {
-        public HttpCookie(string name,string value)
+        public HttpCookie(string name, string value)
         {
             Guard.AgainstNull(name, nameof(name));
             Guard.AgainstNull(value, nameof(value));

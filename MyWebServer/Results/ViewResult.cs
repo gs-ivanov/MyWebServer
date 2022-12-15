@@ -1,10 +1,10 @@
 ﻿namespace MyWebServer.Results
 {
     using MyWebServer.Http;
-    using System.Linq;
     using System.IO;
+    using System.Linq;
 
-    public class ViewResult:ActionResult
+    public class ViewResult : ActionResult
     {
         private const char PathSeparator = '/';
 
@@ -18,12 +18,12 @@
 
         private void GetHtml(string viewName, string controllerName, object model)
         {
-            if (viewName.Contains(PathSeparator))
+            if (!viewName.Contains(PathSeparator))
             {
                 viewName = controllerName + PathSeparator + viewName;
             }
 
-            var viewPath = Path.GetFullPath($"./Views" + viewName.TrimStart(PathSeparator) + ".cshtml");
+            var viewPath = Path.GetFullPath($"./Views/" + viewName.TrimStart(PathSeparator) + ".cshtml");
 
             if (!File.Exists(viewPath))
             {
@@ -34,7 +34,7 @@
 
             var viewContent = File.ReadAllText(viewPath);
 
-            if (model !=null)
+            if (model != null)
             {
                 viewContent = this.PopulateModel(viewContent, model);
             }
@@ -44,7 +44,7 @@
 
         private void PrepareMissingViewError(string viewPath)
         {
-            this.StatusCode=HttpStatusCode.NotFound;
+            this.StatusCode = HttpStatusCode.NotFound;
 
             var errorMessage = $"View '{viewPath}' was not found.";
 
@@ -62,7 +62,6 @@
                     Value = pr.GetValue(model)
                 });
 
-
             foreach (var entry in data)
             {
                 const string openingBrackets = "{{";
@@ -73,7 +72,6 @@
 
             return viewContent;
         }
-
 
     }
 }

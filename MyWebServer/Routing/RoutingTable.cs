@@ -2,7 +2,7 @@
 {
     using MyWebServer.Common;
     using MyWebServer.Http;
-    using MyWebServer.Responses;
+    using MyWebServer.Results;
     using System;
     using System.Collections.Generic;
 
@@ -42,9 +42,8 @@
         public IRoutingTable MapGet(
             string path,
             HttpResponse response)
-        {
-           return MapGet(path, request => response);
-        }
+            => MapGet(path, request => response);
+
 
         public IRoutingTable MapGet(string path, Func<HttpRequest, HttpResponse> responseFunction)
             => Map(HttpMethod.Get, path, responseFunction);
@@ -65,7 +64,7 @@
             if (!this.routes.ContainsKey(requestMethod)
                 || !this.routes[requestMethod].ContainsKey(requestPath))
             {
-                return new NotFoundResponse();
+                return new HttpResponse(HttpStatusCode.NotFound);
             }
 
             var responseFunction = this.routes[requestMethod][requestPath];

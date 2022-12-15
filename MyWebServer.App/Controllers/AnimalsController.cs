@@ -37,9 +37,9 @@
 
         public HttpResponse Dogs() => View(new DogViewModel
         {
-            Name="Rex",
-            Age=3,
-            Breed="Street Perfect"
+            Name = "Rex",
+            Age = 3,
+            Breed = "Street Perfect"
         });
 
         public HttpResponse Bunnies() => View("Rabbits");
