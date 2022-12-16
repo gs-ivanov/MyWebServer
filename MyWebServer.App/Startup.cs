@@ -26,6 +26,5 @@
             .MapPost<CatsController>("/Cats/Save", c => c.Save()))
             .Start();
 
-        // For test purpose
      }
 }
