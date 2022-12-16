@@ -32,7 +32,7 @@
 
             var startLine = lines.First().Split(" ");
 
-            var method = ParseHttpMethod(startLine[0]);
+            var method = ParseMethod(startLine[0]);
             var url = startLine[1];
 
             var (path, query) = ParseUrl(url);
@@ -62,21 +62,15 @@
             };
         }
 
-        public override string ToString()
-        {
-            // todo;
-            return null;
-        }
-
-        private static HttpMethod ParseHttpMethod(string method)
-            => method.ToUpper() switch
-            {
-                "GET" => HttpMethod.Get,
-                "POST" => HttpMethod.Post,
-                "PUT" => HttpMethod.Put,
-                "DELETE" => HttpMethod.Delete,
-                _ => throw new InvalidOperationException($"Method '{method}' is not supported"),
-            };
+        private static HttpMethod ParseMethod(string method)
+             => method.ToUpper() switch
+             {
+                 "GET" => HttpMethod.Get,
+                 "POST" => HttpMethod.Post,
+                 "PUT" => HttpMethod.Put,
+                 "DELETE" => HttpMethod.Delete,
+                 _ => throw new InvalidOperationException($"Method '{method}' is not supported"),
+             };
 
         private static (string, Dictionary<string, string>) ParseUrl(string url)
         {
@@ -158,7 +152,10 @@
 
             if (!Sessions.ContainsKey(sessionId))
             {
-                Sessions[sessionId] = new HttpSession(sessionId);
+                Sessions[sessionId] = new HttpSession(sessionId)
+                {
+                    IsNew = true
+                };
             }
 
             return Sessions[sessionId];
