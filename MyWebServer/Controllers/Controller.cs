@@ -5,7 +5,7 @@
     using MyWebServer.Results;
     using System.Runtime.CompilerServices;
 
-    
+
     public abstract class Controller
     {
         private const string UserSessionKey = "AuthenticatedUserId";
@@ -19,8 +19,8 @@
                 : new();
         }
 
-        protected HttpRequest Request{ get; private init; } 
-     
+        protected HttpRequest Request { get; private init; }
+
         protected HttpResponse Response { get; private init; } = new HttpResponse(HttpStatusCode.OK);
 
         protected UserIdentity User { get; private set; }
@@ -28,7 +28,7 @@
         protected void SignIn(string userId)
         {
             this.Request.Session[UserSessionKey] = userId;
-            this.User =new UserIdentity { Id = userId };
+            this.User = new UserIdentity { Id = userId };
         }
 
         protected void SignOut()
@@ -45,18 +45,17 @@
 
         protected ActionResult Redirect(string location)
             => new RedirectResult(this.Response, location);
-
         protected ActionResult View([CallerMemberName] string viewName = "")
-            => new ViewResult(this.Response, viewName, this.GetControllerName(), null);
+            => new ViewResult(this.Response, viewName, this.GetType().GetControllerName(), null);
 
         protected ActionResult View(string viewName, object model)
-                   => new ViewResult(this.Response, viewName, this.GetControllerName(), model);
+                   => new ViewResult(this.Response, viewName, this.GetType().GetControllerName(), model);
 
         protected ActionResult View(object model, [CallerMemberName] string viewName = "")
-                   => new ViewResult(this.Response, viewName, this.GetControllerName(), model);
+                   => new ViewResult(this.Response, viewName, this.GetType().GetControllerName(), model);
 
-        private string GetControllerName()
-            => this.GetType().Name
-            .Replace(nameof(Controller), string.Empty);
+        //private string GetControllerName()
+        //    => this.GetType().Name
+        //    .Replace(nameof(Controller), string.Empty);
     }
 }
