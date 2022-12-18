@@ -5,10 +5,9 @@
     using MyWebServer.Results;
     using System.Runtime.CompilerServices;
 
-
     public abstract class Controller
     {
-        private const string UserSessionKey = "AuthenticatedUserId";
+        public const string UserSessionKey = "AuthenticatedUserId";
 
         protected Controller(HttpRequest request)
         {

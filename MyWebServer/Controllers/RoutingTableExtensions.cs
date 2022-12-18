@@ -1,11 +1,11 @@
 ﻿namespace MyWebServer.Controllers
 {
+    using MyWebServer.Http;
+    using MyWebServer.Routing;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using MyWebServer.Http;
-    using MyWebServer.Routing;
 
     public static class RoutingTableExtensions
     {
@@ -27,7 +27,6 @@
                 CreateController<TController>(request)));
 
 
-
         public static IRoutingTable MapControllers(this IRoutingTable routingTable)
         {
             var controllerActions = GetControllerActions();
@@ -41,14 +40,29 @@
 
                 var responseFunction = GetResponseFunction(controllerAction);
 
-                routingTable.MapGet(path, responseFunction);
+                //routingTable.MapGet(path, responseFunction);
+                var httpMethod = HttpMethod.Get;
+                //MapDefaultRoutes(routingTable, controllerName, actionName, responseFunction);
+                var httpMethodAttribute = controllerAction
+                .GetCustomAttribute<HttpMethodAttribute>();
 
-                MapDefaultRoutes(routingTable, controllerName, actionName, responseFunction);
+                if (httpMethodAttribute != null)
+                {
+                    httpMethod = httpMethodAttribute.HttpMethod;
+                }
+
+                routingTable.Map(httpMethod, path, responseFunction);
+
+                MapDefaultRoutes(
+                    routingTable,
+                    httpMethod,
+                    controllerName,
+                    actionName,
+                    responseFunction);
             }
 
             return routingTable;
         }
-
         private static IEnumerable<MethodInfo> GetControllerActions()
             => Assembly
                 .GetEntryAssembly()
@@ -64,6 +78,12 @@
         private static Func<HttpRequest, HttpResponse> GetResponseFunction(MethodInfo controllerAction)
             => request =>
             {
+                if (!UserIsAuthorized(controllerAction, request.Session))
+                {
+                    return new HttpResponse(HttpStatusCode.Unauthorized);
+                }
+
+
                 var controllerInstance = CreateController(controllerAction.DeclaringType, request);
 
                 return (HttpResponse)controllerAction.Invoke(controllerInstance, Array.Empty<object>());
@@ -78,6 +98,7 @@
 
         private static void MapDefaultRoutes(
             IRoutingTable routingTable,
+            HttpMethod httpMethod,
             string controllerName,
             string actionName,
             Func<HttpRequest, HttpResponse> responseFunction)
@@ -87,13 +108,36 @@
 
             if (actionName == defaultActionName)
             {
-                routingTable.MapGet($"/{controllerName}", responseFunction);
+                routingTable.Map(httpMethod, $"/{controllerName}", responseFunction);
 
                 if (controllerName == defaultControllerName)
                 {
-                    routingTable.MapGet("/", responseFunction);
+                    routingTable.Map(httpMethod, "/", responseFunction);
                 }
             }
+        }
+
+        private static bool UserIsAuthorized(
+            MethodInfo controllerAction,
+            HttpSession session)
+        {
+            var authorizationRequired = controllerAction
+                .DeclaringType
+                .GetCustomAttribute<AuthorizeAttribute>()
+                ?? controllerAction
+                .GetCustomAttribute<AuthorizeAttribute>();
+
+            if (authorizationRequired != null)
+            {
+                var userIsAuthorized = session.ContainsKey(Controller.UserSessionKey)
+                    && session[Controller.UserSessionKey] != null;
+
+                if (!userIsAuthorized)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

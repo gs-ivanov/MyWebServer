@@ -10,7 +10,7 @@
             : base(request)
         {
         }
-        //public HttpResponse ActionWithCookies()
+
         public HttpResponse Login()
         {
             // var user = this.db.Users.Find(username, password);
@@ -23,7 +23,6 @@
             // } 
             // 
             // return Text("Invalid credentials!");
-
 
             var someUserId = "MyUserId"; // should come from the database
 
@@ -45,9 +44,13 @@
             {
                 return Text($"Authenticated user: {this.User.Id}");
             }
-
+          
             return Text($"User is not authenticated!");
         }
+
+        [Authorize]
+        public HttpResponse AuthorizationCheck()
+            => Text($"Current user: {this.User.Id}");
 
         public HttpResponse CookiesCheck()
         {
@@ -63,7 +66,7 @@
             this.Response.AddCookie(cookieName, "My-Value");
             this.Response.AddCookie("My-Second-Cookie", "My-Second-Value");
 
-                return Text($"Cookies set!");
+            return Text($"Cookies set!");
         }
         public HttpResponse SessionCheck()
         {
