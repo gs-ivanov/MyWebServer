@@ -6,10 +6,10 @@
 
     public class AccountController : Controller
     {
-        public AccountController(HttpRequest request)
-            : base(request)
-        {
-        }
+        //public AccountController(HttpRequest request)
+        //    : base(request)
+        //{
+        //}
 
         public HttpResponse Login()
         {

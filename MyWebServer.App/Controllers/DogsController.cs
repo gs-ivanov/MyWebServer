@@ -6,10 +6,10 @@
 
     public class DogsController : Controller
     {
-        public DogsController(HttpRequest request)
-            : base(request)
-        {
-        }
+        //public DogsController(HttpRequest request)
+        //    : base(request)
+        //{
+        //}
 
         [HttpGet]
         public HttpResponse Create() => View();
