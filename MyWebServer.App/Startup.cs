@@ -7,11 +7,33 @@
 
     public class Startup
     {
+        //class Foo
+        //{
+        //    public int A { get; set; }
+        //    public string B { get; set; }
+        //    public bool T { get; set; }
+
+        //    public void Show()
+        //    {
+        //        System.Console.WriteLine(8888);
+        //    }
+        //}
+        //public static void Main()
+        //{
+        //    System.Console.WriteLine(9999);
+
+        //    Foo foo = new Foo { A = 999, B = "Hi!!" ,T=true};
+
+        //    foreach (var prop in foo.GetType().GetProperties())
+        //    {
+        //        System.Console.WriteLine($"{prop.Name} = {prop.GetValue(foo,null)}");
+        //    }
+        //}
         public static async Task Main()
             => await new HttpServer(routes => routes
                 .MapStaticFiles()
                 .MapControllers()
-                .MapGet<HomeController>("/ToCats",c=>c.LocalRedirect()))
+                .MapGet<HomeController>("/ToCats", c => c.LocalRedirect()))
             .Start();
 
         //.MapGet<HomeController>("/", c => c.Index())
