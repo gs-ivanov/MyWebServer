@@ -203,5 +203,6 @@
         private static string GetValue(this HttpRequest request, string name)
             => request.Query.GetValueOrDefault(name) ??
             request.Form.GetValueOrDefault(name);
+
     }
 }
