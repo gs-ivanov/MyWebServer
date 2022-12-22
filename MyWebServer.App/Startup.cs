@@ -51,7 +51,5 @@
         //.MapGet<AccountController>("/Session", c => c.SessionCheck())
         //.MapGet<AccountController>("/Authentication", c => c.AuthenticationCheck())
         //.MapGet<CatsController>("/Cats/Create", c => c.Create())
-
-
     }
 }
