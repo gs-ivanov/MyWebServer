@@ -1,6 +1,7 @@
 ﻿namespace MyWebServer.Results
 {
     using MyWebServer.Http;
+    using MyWebServer.Http.Collection;
     using System;
     using System.Collections.Generic;
     public abstract class ActionResult : HttpResponse
@@ -14,9 +15,9 @@
             this.PrepareCookies(response.Cookies);
         }
 
-        private void PrepareHeaders(IDictionary<string, HttpHeader> headers)
+        private void PrepareHeaders(HeaderCollection headers)
         {
-            foreach (var header in headers.Values)
+            foreach (var header in headers)
             {
                 this.AddHeader(header.Name, header.Value);
             }
