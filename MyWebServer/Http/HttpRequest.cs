@@ -1,5 +1,6 @@
 ﻿namespace MyWebServer.Http
 {
+    using MyWebServer.Http.Collection;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -15,13 +16,13 @@
 
         public string Path { get; private set; }
 
-        public IReadOnlyDictionary<string, string> Query { get; private set; }
+        public QueryCollection Query { get; private set; }
 
-        public IReadOnlyDictionary<string, HttpHeader> Headers { get; private set; }
+        public HeaderCollection Headers { get; private set; }
 
         public IReadOnlyDictionary<string, HttpCookie> Cookies { get; private set; }
 
-        public IReadOnlyDictionary<string, string> Form { get; private set; }
+        public FormCollection Form { get; private set; }
 
         public string Body { get; private set; }
 
@@ -63,25 +64,27 @@
                 Form = form
             };
         }
-
         private static HttpMethod ParseMethod(string method)
-             => method.ToUpper() switch
-             {
-                 "GET" => HttpMethod.Get,
-                 "POST" => HttpMethod.Post,
-                 "PUT" => HttpMethod.Put,
-                 "DELETE" => HttpMethod.Delete,
-                 _ => throw new InvalidOperationException($"Method '{method}' is not supported"),
-             };
+        {
+            try
+            {
+                return (HttpMethod)Enum.Parse(typeof(HttpMethod), method, true);
+            }
+            catch (Exception)
+            {
 
-        private static (string, Dictionary<string, string>) ParseUrl(string url)
+                throw new InvalidOperationException($"Method '{method}' is not supported");
+            }
+        }
+
+        private static (string, QueryCollection) ParseUrl(string url)
         {
             var urlParts = url.Split('?', 2);
 
             var path = urlParts[0];
             var query = urlParts.Length > 1
-                ? ParseQuery(urlParts[1])
-                : new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+                ? new QueryCollection(ParseQuery(urlParts[1]))
+                : new QueryCollection();
 
             return (path, query);
         }
@@ -95,7 +98,8 @@
                 part => part[1],
                 StringComparer.InvariantCultureIgnoreCase);
 
-        private static Dictionary<string, HttpHeader> ParseHeaders(IEnumerable<string> headerLines)
+
+        private static HeaderCollection ParseHeaders(IEnumerable<string> headerLines)
         {
             var headerCollection = new Dictionary<string, HttpHeader>(StringComparer.InvariantCultureIgnoreCase);
 
@@ -121,18 +125,18 @@
                 headerCollection[headerName] = header;
             }
 
-            return headerCollection;
+            return new HeaderCollection(headerCollection);
         }
 
-        private static Dictionary<string, HttpCookie> ParseCookies(Dictionary<string, HttpHeader> headers)
+        private static Dictionary<string, HttpCookie> ParseCookies(HeaderCollection headers)
         {
             var cookieCollection = new Dictionary<string, HttpCookie>(StringComparer.InvariantCultureIgnoreCase);
 
-            if (headers.ContainsKey(HttpHeader.Cookie))
+            if (headers.Contains(HttpHeader.Cookie))
             {
                 var cookieHeader = headers[HttpHeader.Cookie];
 
-                var allCookies = cookieHeader.Value.Split(';');
+                var allCookies = cookieHeader.Split(';');
 
                 foreach (var cookieText in allCookies)
                 {
@@ -166,16 +170,17 @@
 
             return Sessions[sessionId];
         }
-        private static Dictionary<string, string> ParseForm(Dictionary<string, HttpHeader> headers, string body)
+
+        private static FormCollection ParseForm(HeaderCollection headers, string body)
         {
             var result = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
-            if (headers.ContainsKey(HttpHeader.ContentType)
-                && headers[HttpHeader.ContentType].Value == HttpContentType.FormUrlEncoded)
+            if (headers.Contains(HttpHeader.ContentType)
+                && headers[HttpHeader.ContentType] == HttpContentType.FormUrlEncoded)
             {
                 result = ParseQuery(body);
             }
-            return result;
+            return new FormCollection(result);
         }
     }
 }
