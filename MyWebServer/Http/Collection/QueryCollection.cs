@@ -7,15 +7,12 @@
     public class QueryCollection : IEnumerable<string>
     {
         private readonly Dictionary<string, string> query;
-        public QueryCollection(Dictionary<string, string> query)
-            => this.query = query;        //.ToDictionary(p=>p.Key.TpLower(),p=>p.Value
-        public QueryCollection()
-            :this(new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase))
-        {
-        }
 
-        public string this[string value]
-            =>this.query[value];   //value had tolower()
+                public QueryCollection()
+            => this.query =new(StringComparer.InvariantCultureIgnoreCase);        //.ToDictionary(p=>p.Key.TpLower(),p=>p.Value
+
+        public string this[string name]
+            =>this.query[name];   //value had tolower()
 
         public void add(string name, string value)
             => this.query[name] = value;

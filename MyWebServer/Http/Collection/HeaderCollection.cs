@@ -8,12 +8,8 @@
     {
         private readonly Dictionary<string, HttpHeader> headers;
 
-        public HeaderCollection(Dictionary<string, HttpHeader> headers)
-            => this.headers = headers;
         public HeaderCollection()
-    : this(new Dictionary<string, HttpHeader>(StringComparer.InvariantCultureIgnoreCase))
-        {
-        }
+            => this.headers = new(StringComparer.InvariantCultureIgnoreCase);
 
         public string this[string name]
             => this.headers[name].Value;
@@ -21,11 +17,7 @@
         public int Count => this.headers.Count;
 
         public void Add(string name, string value)
-        {
-            var header = new HttpHeader(name, value);
-
-            this.headers[name] = header;
-        }
+            => this.headers[name] = new HttpHeader(name, value);
 
         public bool Contains(string name)
             => this.headers.ContainsKey(name);

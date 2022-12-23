@@ -8,15 +8,11 @@
     {
         private readonly Dictionary<string, string> form;
 
-        public FormCollection(Dictionary<string, string> form)
-            => this.form = form;
         public FormCollection()
-            :this(new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase))
-        {
-        }
+            => this.form = new(StringComparer.InvariantCultureIgnoreCase);
 
-        public string this[string value]
-            =>this.form[value];
+        public string this[string name]
+            =>this.form[name];
 
         public void Add(string name, string value)
             => this.form[name] = value;
