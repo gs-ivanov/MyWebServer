@@ -19,15 +19,15 @@
         {
             foreach (var header in headers)
             {
-                this.AddHeader(header.Name, header.Value);
+                this.Headers.Add(header.Name, header.Value);
             }
         }
 
-        private void PrepareCookies(IDictionary<string, HttpCookie> cookies)
+        private void PrepareCookies(CookieCollection cookies)
         {
-            foreach (var cookie in cookies.Values)
+            foreach (var cookie in cookies)
             {
-                this.AddHeader(cookie.Name, cookie.Value);
+                this.Headers.Add(cookie.Name, cookie.Value);
             }
         }
 
