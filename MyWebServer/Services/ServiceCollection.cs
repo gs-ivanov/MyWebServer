@@ -15,10 +15,15 @@
             where TService : class
             where TImplementation : TService
         {
-            this.services[typeof(TService)]=typeof(TImplementation);
+            this.services[typeof(TService)] = typeof(TImplementation);
 
             return this;
         }
+
+        public IServiceCollection Add<TService>()
+             where TService : class
+             => this.Add<TService, TService>();
+
 
         public TService Get<TService>()
             where TService : class
@@ -44,7 +49,7 @@
 
             var constructors = type.GetConstructors();
 
-            if (constructors.Length>1)
+            if (constructors.Length > 1)
             {
                 throw new InvalidOperationException("Multiple constructors are not supported in the service resolver.");
             }
@@ -58,7 +63,7 @@
             for (int i = 0; i < parameters.Length; i++)
             {
                 var parameterType = parameters[i].ParameterType;
-                
+
                 var parameterValue = this.CreateInstance(parameterType);
 
                 parameterValues[i] = parameterValue;
