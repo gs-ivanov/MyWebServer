@@ -17,6 +17,7 @@
             .WithServices(services=>services
                 .Add<IData,MyDbContext>())
             .Start();
+        // My Test Comment
         //class Foo
         //{
         //    public int A { get; set; }
