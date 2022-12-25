@@ -4,9 +4,19 @@
     using MyWebServer.App.Controllers;
     using MyWebServer.Controllers;
     using System.Threading.Tasks;
+    using MyWebServer.App.Data;
 
     public class Startup
     {
+        public static async Task Main()
+            => await HttpServer
+            .WithRoutes(routes => routes
+                .MapStaticFiles()
+                .MapControllers()
+                .MapGet<HomeController>("/ToCats", c => c.LocalRedirect()))
+                .WithServices(services=>services
+                    .Add<IData,MyDbContext())
+            .Start();
         //class Foo
         //{
         //    public int A { get; set; }
@@ -29,12 +39,12 @@
         //        System.Console.WriteLine($"{prop.Name} = {prop.GetValue(foo,null)}");
         //    }
         //}
-        public static async Task Main()
-            => await new HttpServer(routes => routes
-                .MapStaticFiles()
-                .MapControllers()
-                .MapGet<HomeController>("/ToCats", c => c.LocalRedirect()))
-            .Start();
+        //public static async Task Main()
+        //    => await new HttpServer(routes => routes
+        //        .MapStaticFiles()
+        //        .MapControllers()
+        //        .MapGet<HomeController>("/ToCats", c => c.LocalRedirect()))
+        //    .Start();
 
         //.MapGet<HomeController>("/", c => c.Index())
         //.MapGet<HomeController>("/ToCats", c => c.LocalRedirect())
