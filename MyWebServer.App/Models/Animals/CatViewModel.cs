@@ -3,6 +3,7 @@
     public class CatViewModel
     {
         public string Name { get; init; }
+        public string Breed { get; init; }
         public int Age { get; init; }
     }
 }

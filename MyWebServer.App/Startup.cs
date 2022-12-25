@@ -1,9 +1,9 @@
 ﻿namespace MyWebServer.App
 {
-    using MyWebServer;
-    using MyWebServer.App.Controllers;
-    using MyWebServer.Controllers;
     using System.Threading.Tasks;
+    using MyWebServer;
+    using MyWebServer.Controllers;
+    using MyWebServer.App.Controllers;
     using MyWebServer.App.Data;
 
     public class Startup
@@ -14,8 +14,8 @@
                 .MapStaticFiles()
                 .MapControllers()
                 .MapGet<HomeController>("/ToCats", c => c.LocalRedirect()))
-                .WithServices(services=>services
-                    .Add<IData,MyDbContext())
+            .WithServices(services=>services
+                .Add<IData,MyDbContext>())
             .Start();
         //class Foo
         //{

@@ -9,6 +9,7 @@
         public HttpResponse Cats()
         {
             const string nameKey = "Name";
+            const string breedKey = "Breed";
             const string ageKey = "Age";
 
             var query = this.Request.Query;
@@ -17,6 +18,10 @@
                 ? query[nameKey]
                 : "this cats";
 
+            var catBreed = query.Contains(breedKey)
+                ? query[breedKey]
+                : "Sha";
+
             var catAge = query.Contains(ageKey)
                 ? int.Parse(query[ageKey])
                 : 0;
@@ -24,6 +29,7 @@
             var viewModel = new CatViewModel
             {
                 Name = catName,
+                Breed = catBreed,
                 Age = catAge
             };
 

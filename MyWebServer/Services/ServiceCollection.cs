@@ -25,7 +25,7 @@
         {
             var typeOfService = typeof(TService);
 
-            if (!this.services.ContainsKey(typeOfService)
+            if (!this.services.ContainsKey(typeOfService))
             {
                 return null;
             }
@@ -35,7 +35,7 @@
             return (TService)this.CreateInstance(implementationType);
         }
 
-        private object CreateInstance(Type type)
+        public object CreateInstance(Type type)
         {
             if (this.services.ContainsKey(type))
             {

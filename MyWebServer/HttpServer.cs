@@ -2,12 +2,12 @@
 {
     using MyWebServer.Http;
     using MyWebServer.Routing;
+    using MyWebServer.Services;
     using System;
     using System.Net;
     using System.Net.Sockets;
     using System.Text;
     using System.Threading.Tasks;
-    using MyWebServer.Services;
 
     public class HttpServer
     {
@@ -25,24 +25,24 @@
 
             listener = new TcpListener(this.ipAddress, port);
 
-            this.routingTable= (RoutingTable)routingTable;
+            this.routingTable = (RoutingTable)routingTable;
 
             this.serviceCollection = new ServiceCollection();
         }
 
-        public HttpServer(int port, IRoutingTable routingTable)
+        private HttpServer(int port, IRoutingTable routingTable)
             : this("127.0.0.1", port, routingTable)
         {
         }
 
-        public HttpServer(IRoutingTable routingTable)
+        private HttpServer(IRoutingTable routingTable)
             : this(5000, routingTable)
         {
         }
 
         public static HttpServer WithRoutes(Action<IRoutingTable> routingTableConfiguration)
         {
-            var routingTable = new RoutingTable;
+            var routingTable = new RoutingTable();
 
             routingTableConfiguration(routingTable);
 
@@ -51,7 +51,7 @@
             return httpServer;
         }
 
-        public  HttpServer WithRoutes(Action<IServiceCollection> serviceCollectionConfiguration)
+        public HttpServer WithServices(Action<IServiceCollection> serviceCollectionConfiguration)
         {
             serviceCollectionConfiguration(this.serviceCollection);
 
@@ -77,7 +77,7 @@
 
                       try
                       {
-                          var request = HttpRequest.Parse(requestText,this.serviceCollection);
+                          var request = HttpRequest.Parse(requestText, this.serviceCollection);
 
                           var response = this.routingTable.ExecuteRequest(request);
 

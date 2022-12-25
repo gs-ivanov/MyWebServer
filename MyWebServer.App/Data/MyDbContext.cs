@@ -14,4 +14,3 @@
         public IEnumerable<Cat> Cats { get; }
     }
 }
-}
