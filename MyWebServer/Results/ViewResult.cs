@@ -16,7 +16,7 @@
             object model,
             string userId)
             : base(response)
-            => this.GetHtml(viewEngine,viewName, controllerName, model,userId);
+            => this.GetHtml(viewEngine, viewName, controllerName, model, userId);
 
         private void GetHtml(IViewEngine viewEngine, string viewName, string controllerName, object model, string userId)
         {
@@ -47,7 +47,7 @@
 
             if (model != null)
             {
-                viewContent = viewEngine.RenderHtml(viewContent, model,userId);
+                viewContent = viewEngine.RenderHtml(viewContent, model, userId);
             }
 
             this.SetContent(viewContent, HttpContentType.Html);

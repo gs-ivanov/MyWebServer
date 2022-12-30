@@ -3,12 +3,13 @@
     using MyWebServer.Http;
     using MyWebServer.Identity;
     using MyWebServer.Results;
+    using MyWebServer.Results.Views;
     using System.Runtime.CompilerServices;
 
     public abstract class Controller
     {
         public const string UserSessionKey = "AuthenticatedUserId";
-
+       
         private UserIdentity userIdentity;
         private IViewEngine viewEngine;
 
@@ -35,7 +36,7 @@
         {
             get
             {
-                if (this.viewEngine == null)
+                if (this.viewEngine==null)
                 {
                     this.viewEngine = this.Request.Services.Get<IViewEngine>()
                         ?? new ParserViewEngine();
@@ -56,6 +57,7 @@
             this.Request.Session.Remove(UserSessionKey);
             this.userIdentity = new();
         }
+
         protected ActionResult Text(string text)
             => new TextResult(this.Response, text);
 
@@ -64,17 +66,15 @@
 
         protected ActionResult Redirect(string location)
             => new RedirectResult(this.Response, location);
+
         protected ActionResult View([CallerMemberName] string viewName = "")
-            => new ViewResult(this.Response, viewName, this.GetType().GetControllerName(), null);
+            => this.GetViewResult(viewName, null);
 
         protected ActionResult View(string viewName, object model)
-                   => this.GetViewResult(viewName, model);
+            => this.GetViewResult(viewName, null);
 
         protected ActionResult View(object model, [CallerMemberName] string viewName = "")
-                   => this.GetViewResult(viewName, model);
-
-        protected ActionResult View(object model, [CallerMemberName] string viewName = "")
-            => this.GetViewResult(viewName, model);
+             => this.GetViewResult(viewName, model);
 
         private ActionResult GetViewResult(string viewName, object model)
             => new ViewResult(this.Response, this.ViewEngine, viewName, this.GetType().GetControllerName(), model, this.User.Id);
