@@ -15,7 +15,7 @@
         public string RenderHtml(string content, object model, string userId)
         {
             var csharpCode = GenerateCSharpFromTemplate(content, model);
-            var executableObject = GenerateExecutableCode(csharpCode, model);
+            var executableObject = GenerateExecutableCоde(csharpCode, model);
             var html = executableObject.ExecuteTemplate(model, userId);
 
             return html;
