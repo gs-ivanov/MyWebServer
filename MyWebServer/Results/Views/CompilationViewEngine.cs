@@ -90,7 +90,7 @@ namespace ViewNamespace
                 }
                 else
                 {
-                    csharpCode.Append($"html.Appendline(@\"");
+                    csharpCode.Append($"html.AppendLine(@\"");
 
                     while (line.Contains("@"))
                     {

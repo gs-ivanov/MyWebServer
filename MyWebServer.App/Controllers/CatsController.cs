@@ -27,7 +27,7 @@
                 .Cats
                 .ToList();
 
-            var result = "<h1>All cats in the system:</h1>";
+            var result = "<h1>All cats in the system from AllHtml:</h1>";
 
             result += "<ul>";
 
