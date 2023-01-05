@@ -48,20 +48,17 @@ namespace ViewNamespace
     using System.Linq;
     using System.Collections.Generic;
     using MyWebServer.Results.Views;
-
     public class ViewClass : IView
+    {
+        public string ExecuteTemplate(object viewModel, string user)
         {
-            public string ExecuteTemplate(object viewModel,string user)
-            {
-                var User = user;
-                var Model=viewModel as " + typeOfModel + @";
-                var html = new StringBuilder();
-
-                " + GetMethodBody(templateCode) + @"
-
-                return html.ToString();
-            }
+            var User = user;
+            var Model = viewModel as " + typeOfModel + @";
+            var html = new StringBuilder();
+            " + GetMethodBody(templateCode) + @"
+            return html.ToString();
         }
+    }
 }
 ";
             return csharpCode;
@@ -75,9 +72,9 @@ namespace ViewNamespace
             var sr = new StringReader(templateCode);
             string line = null;
 
-            while ((line=sr.ReadLine())!=null)
+            while ((line = sr.ReadLine()) != null)
             {
-                if (supportedOperators.Any(x=>line.TrimStart().StartsWith("@"+x)))
+                if (supportedOperators.Any(x => line.TrimStart().StartsWith("@" + x)))
                 {
                     var atSignLocation = line.IndexOf("@");
                     line = line.Remove(atSignLocation, 1);
@@ -96,34 +93,34 @@ namespace ViewNamespace
                     {
                         var atSignLocation = line.IndexOf("@");
                         var htmlBeforeAtSign = line.Substring(0, atSignLocation);
-                        csharpCode.Append(htmlBeforeAtSign.Replace("\"", "\"\"") + "\"+");
+                        csharpCode.Append(htmlBeforeAtSign.Replace("\"", "\"\"") + "\" + ");
                         var lineAfterAtSign = line.Substring(atSignLocation + 1);
                         var code = csharpCodeRegex.Match(lineAfterAtSign).Value;
                         csharpCode.Append(code + " + @\"");
                         line = lineAfterAtSign.Substring(code.Length);
                     }
 
-                    csharpCode.AppendLine(line.Replace("\"","\"\"")+"\");");
+                    csharpCode.AppendLine(line.Replace("\"", "\"\"") + "\");");
                 }
             }
 
             return csharpCode.ToString();
         }
 
-        private IView GenerateExecutableCоde(string csharpCode,object viewModel)
+        private IView GenerateExecutableCоde(string csharpCode, object viewModel)
         {
             var compileResult = CSharpCompilation.Create("ViewAssembly")
                 .WithOptions(new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary))
                 .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
                 .AddReferences(MetadataReference.CreateFromFile(typeof(IView).Assembly.Location));
 
-            if (viewModel!=null)
+            if (viewModel != null)
             {
                 if (viewModel.GetType().IsGenericType)
                 {
-                    var genericArgumrnts = viewModel.GetType().GenericTypeArguments;
+                    var genericArguments = viewModel.GetType().GenericTypeArguments;
 
-                    foreach (var genericArgument in genericArgumrnts)
+                    foreach (var genericArgument in genericArguments)
                     {
                         compileResult = compileResult
                             .AddReferences(MetadataReference.CreateFromFile(genericArgument.Assembly.Location));
@@ -166,11 +163,11 @@ namespace ViewNamespace
 
                 var instance = Activator.CreateInstance(viewType);
 
-                return (instance as IView) ?? new ErrorView(new List<string> { "Instance is null" }, csharpCode);
+                return (instance as IView) ?? new ErrorView(new List<string> { "Instance is null." }, csharpCode);
             }
             catch (Exception ex)
             {
-                return new ErrorView(new List<string> { ex.ToString()},csharpCode);
+                return new ErrorView(new List<string> { ex.ToString() }, csharpCode);
             }
         }
     }

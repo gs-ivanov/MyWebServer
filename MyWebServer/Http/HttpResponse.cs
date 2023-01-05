@@ -28,7 +28,7 @@
 
         public static HttpResponse ForError(string message)
             => new HttpResponse(HttpStatusCode.InternalServerError)
-             .SetContent(message, HttpContentType.PlainText);
+                .SetContent(message, HttpContentType.PlainText);
 
         public HttpResponse SetContent(string content, string contentType)
         {
@@ -81,6 +81,5 @@
 
             return result.ToString();
         }
-
     }
 }

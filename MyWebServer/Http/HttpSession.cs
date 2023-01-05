@@ -27,7 +27,7 @@
         public string this[string key]
         {
             get => this.data[key];
-            set => this.data[key]=value;
+            set => this.data[key] = value;
         }
 
         public bool Contains(string key)

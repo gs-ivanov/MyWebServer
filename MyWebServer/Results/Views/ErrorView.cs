@@ -19,9 +19,9 @@
         {
             var html = new StringBuilder();
 
-            html.AppendLine($"View compile {this.errors.Count()} errors: </h1><ul>");
+            html.AppendLine($"<h1>View compile {this.errors.Count()} errors:</h1><ul>");
 
-            foreach (var error in errors)
+            foreach (var error in this.errors)
             {
                 html.AppendLine($"<li>{error}</li>");
             }

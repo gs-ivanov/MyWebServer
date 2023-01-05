@@ -29,16 +29,15 @@
 
         public HttpSession Session { get; private set; }
 
-        public ServiceCollection Services { get; private set;
-        }
-        public static HttpRequest Parse(string request,ServiceCollection services)
+        public ServiceCollection Services { get; private set; }
+
+        public static HttpRequest Parse(string request, ServiceCollection services)
         {
             var lines = request.Split(NewLine);
 
             var startLine = lines.First().Split(" ");
 
             var method = ParseMethod(startLine[0]);
-
             var url = startLine[1];
 
             var (path, query) = ParseUrl(url);
@@ -65,9 +64,10 @@
                 Session = session,
                 Body = body,
                 Form = form,
-                Services=services
+                Services = services
             };
         }
+
         private static HttpMethod ParseMethod(string method)
         {
             try
@@ -178,7 +178,6 @@
         {
             var formCollection = new FormCollection();
 
-
             if (headers.Contains(HttpHeader.ContentType)
                 && headers[HttpHeader.ContentType] == HttpContentType.FormUrlEncoded)
             {
@@ -195,12 +194,12 @@
 
         private static Dictionary<string, string> ParseQueryString(string queryString)
             => HttpUtility.UrlDecode(queryString)
-            .Split('&')
-            .Select(part => part.Split('='))
-            .Where(part => part.Length == 2)
-            .ToDictionary(
-                part => part[0],
-                part => part[1],
-                StringComparer.InvariantCultureIgnoreCase);
+                .Split('&')
+                .Select(part => part.Split('='))
+                .Where(part => part.Length == 2)
+                .ToDictionary(
+                    part => part[0],
+                    part => part[1],
+                    StringComparer.InvariantCultureIgnoreCase);
     }
 }
