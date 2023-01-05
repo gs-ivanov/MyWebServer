@@ -9,7 +9,6 @@
         {
             this.StatusCode = HttpStatusCode.Found;
 
-
             this.Headers.Add(HttpHeader.Location, location);
         }
     }

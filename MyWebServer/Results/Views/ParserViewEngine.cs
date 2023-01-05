@@ -30,7 +30,7 @@
                 {
                     if (model is not IEnumerable)
                     {
-                        throw new InvalidOperationException("Using a foreach in the loop requires the vie model to be collection.");
+                        throw new InvalidOperationException("Using a foreach in the loop requires the view model to be a collection.");
                     }
 
                     inLoop = true;
@@ -41,7 +41,7 @@
                         .Skip(2)
                         .FirstOrDefault();
 
-                    if (loopModelName==null)
+                    if (loopModelName == null)
                     {
                         throw new InvalidOperationException("The foreach statement in the view is not valid.");
                     }
@@ -82,9 +82,9 @@
             return result.ToString();
         }
 
-        private static string PopulateModelProperties(string content,string modelName,object model)
+        private static string PopulateModelProperties(string content, string modelName, object model)
         {
-            if (model==null)
+            if (model == null)
             {
                 return content;
             }

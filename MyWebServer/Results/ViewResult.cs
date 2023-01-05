@@ -7,7 +7,7 @@
     public class ViewResult : ActionResult
     {
         private const char PathSeparator = '/';
-        private readonly string[] ViewFileExtension = { "html", "cshtml" };
+        private readonly string[] ViewFileExtensions = { "html", "cshtml" };
 
         public ViewResult(
             HttpResponse response,
@@ -25,7 +25,7 @@
             {
                 viewName = controllerName + PathSeparator + viewName;
             }
-            //var viewPath = Path.GetFullPath($"./Views/" + viewName.TrimStart(PathSeparator) + ".cshtml");
+
             var (viewPath, viewExists) = FindView(viewName);
 
             if (!viewExists)
@@ -56,7 +56,7 @@
             string viewPath = null;
             var exists = false;
 
-            foreach (var fileExtension in ViewFileExtension)
+            foreach (var fileExtension in ViewFileExtensions)
             {
                 viewPath = Path.GetFullPath($"./Views/" + viewName.TrimStart(PathSeparator) + $".{fileExtension}");
 

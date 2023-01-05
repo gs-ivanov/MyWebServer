@@ -1,10 +1,10 @@
 ﻿namespace MyWebServer.Routing
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
     using MyWebServer.Common;
     using MyWebServer.Http;
-    using System;
-    using System.IO;
-    using System.Collections.Generic;
 
     public class RoutingTable : IRoutingTable
     {
@@ -44,7 +44,7 @@
             => MapGet(path, request => response);
 
         public IRoutingTable MapGet(string path, Func<HttpRequest, HttpResponse> responseFunction)
-             => Map(HttpMethod.Get, path, responseFunction);
+            => Map(HttpMethod.Get, path, responseFunction);
 
         public IRoutingTable MapPost(
             string path,

@@ -15,7 +15,7 @@
 
         public HttpResponse StaticFiles() => View();
 
-        public HttpResponse HtmlView() => View(new CatViewModel { Name = "Sharo", Age = 5 });
+        public HttpResponse HtmlView() => View(new CatViewModel { Name = "Sharo", Age = 15 });
 
         public HttpResponse MissingView() => View();
 

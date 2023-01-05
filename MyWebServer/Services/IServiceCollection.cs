@@ -8,6 +8,5 @@
 
         IServiceCollection Add<TService>()
             where TService : class;
-       
     }
 }

@@ -13,6 +13,7 @@
     {
         private readonly IPAddress ipAddress;
         private readonly int port;
+
         private readonly TcpListener listener;
 
         private readonly RoutingTable routingTable;
@@ -54,6 +55,20 @@
         public HttpServer WithServices(Action<IServiceCollection> serviceCollectionConfiguration)
         {
             serviceCollectionConfiguration(this.serviceCollection);
+            return this;
+        }
+
+        public HttpServer WithConfiguration<TService>(Action<TService> configuration)
+            where TService : class
+        {
+            var service = this.serviceCollection.Get<TService>();
+
+            if (service == null)
+            {
+                throw new InvalidOperationException($"Service {typeof(TService).FullName} is not registered.");
+            }
+
+            configuration(service);
 
             return this;
         }
@@ -70,30 +85,30 @@
                 var connection = await this.listener.AcceptTcpClientAsync();
 
                 _ = Task.Run(async () =>
-                  {
-                      var networkStream = connection.GetStream();
+                {
+                    var networkStream = connection.GetStream();
 
-                      var requestText = await this.ReadRequest(networkStream);
+                    var requestText = await this.ReadRequest(networkStream);
 
-                      try
-                      {
-                          var request = HttpRequest.Parse(requestText, this.serviceCollection);
+                    try
+                    {
+                        var request = HttpRequest.Parse(requestText, this.serviceCollection);
 
-                          var response = this.routingTable.ExecuteRequest(request);
+                        var response = this.routingTable.ExecuteRequest(request);
 
-                          this.PrepareSession(request, response);
+                        this.PrepareSession(request, response);
 
-                          this.LogPipeLine(requestText, response.ToString());
+                        this.LogPipeline(requestText, response.ToString());
 
-                          await WriteResponse(networkStream, response);
-                      }
-                      catch (Exception exception)
-                      {
-                          await HandleError(networkStream, exception);
-                      }
+                        await WriteResponse(networkStream, response);
+                    }
+                    catch (Exception exception)
+                    {
+                        await HandleError(networkStream, exception);
+                    }
 
-                      connection.Close();
-                  });
+                    connection.Close();
+                });
             }
         }
 
@@ -129,6 +144,7 @@
             if (request.Session.IsNew)
             {
                 response.Cookies.Add(HttpSession.SessionCookieName, request.Session.Id);
+
                 request.Session.IsNew = false;
             }
         }
@@ -144,7 +160,7 @@
             await WriteResponse(networkStream, errorResponse);
         }
 
-        private void LogPipeLine(string request, string response)
+        private void LogPipeline(string request, string response)
         {
             var separator = new string('-', 50);
 
@@ -180,7 +196,6 @@
             }
         }
     }
-
     //public class HttpServer
     //{
     //    private RoutingTable routingTable;

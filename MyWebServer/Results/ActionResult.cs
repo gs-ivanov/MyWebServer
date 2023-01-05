@@ -2,12 +2,12 @@
 {
     using MyWebServer.Http;
     using MyWebServer.Http.Collection;
-    using System;
     using System.Collections.Generic;
+
     public abstract class ActionResult : HttpResponse
     {
         protected ActionResult(HttpResponse response)
-            :base(response.StatusCode)
+            : base(response.StatusCode)
         {
             this.Content = response.Content;
 
@@ -27,9 +27,8 @@
         {
             foreach (var cookie in cookies)
             {
-                this.Headers.Add(cookie.Name, cookie.Value);
+                this.Cookies.Add(cookie.Name, cookie.Value);
             }
         }
-
     }
 }
