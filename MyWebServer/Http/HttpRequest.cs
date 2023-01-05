@@ -100,7 +100,7 @@
 
             foreach (var (name, value) in parsedResult)
             {
-                queryCollection.add(name, value);
+                queryCollection.Add(name, value);
             }
 
             return queryCollection;

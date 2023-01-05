@@ -1,18 +1,19 @@
 ﻿namespace MyWebServer.Controllers
 {
-    using MyWebServer.Http;
-    using MyWebServer.Routing;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using MyWebServer.Http;
+    using MyWebServer.Routing;
 
     public static class RoutingTableExtensions
     {
         private static Type stringType = typeof(string);
         private static Type httpResponseType = typeof(HttpResponse);
+
         public static IRoutingTable MapGet<TController>(
-             this IRoutingTable routingTable,
+            this IRoutingTable routingTable,
             string path,
             Func<TController, HttpResponse> controllerFunction)
             where TController : Controller
@@ -27,7 +28,6 @@
             => routingTable.MapPost(path, request => controllerFunction(
                 CreateController<TController>(request)));
 
-
         public static IRoutingTable MapControllers(this IRoutingTable routingTable)
         {
             var controllerActions = GetControllerActions();
@@ -41,11 +41,10 @@
 
                 var responseFunction = GetResponseFunction(controllerAction);
 
-                //routingTable.MapGet(path, responseFunction);
                 var httpMethod = HttpMethod.Get;
-                //MapDefaultRoutes(routingTable, controllerName, actionName, responseFunction);
+
                 var httpMethodAttribute = controllerAction
-                .GetCustomAttribute<HttpMethodAttribute>();
+                    .GetCustomAttribute<HttpMethodAttribute>();
 
                 if (httpMethodAttribute != null)
                 {
@@ -64,6 +63,7 @@
 
             return routingTable;
         }
+
         private static IEnumerable<MethodInfo> GetControllerActions()
             => Assembly
                 .GetEntryAssembly()
@@ -85,14 +85,14 @@
                 }
 
                 var controllerInstance = CreateController(controllerAction.DeclaringType, request);
-                //return (HttpResponse)controllerAction.Invoke(controllerInstance, Array.Empty<object>());
+
                 var parameterValues = GetParameterValues(controllerAction, request);
 
                 return (HttpResponse)controllerAction.Invoke(controllerInstance, parameterValues);
             };
 
         private static TController CreateController<TController>(HttpRequest request)
-           where TController : Controller
+            where TController : Controller
             => (TController)CreateController(typeof(TController), request);
 
         private static Controller CreateController(Type controllerType, HttpRequest request)
@@ -165,14 +165,14 @@
                 .ToArray();
 
             var parameterValues = new object[actionParameters.Length];
-            
+
             for (int i = 0; i < actionParameters.Length; i++)
             {
                 var parameter = actionParameters[i];
                 var parameterName = parameter.Name;
                 var parameterType = parameter.Type;
 
-                if (parameterType.IsPrimitive||parameterType==stringType)
+                if (parameterType.IsPrimitive || parameterType == stringType)
                 {
                     var parameterValue = request.GetValue(parameterName);
 
@@ -190,7 +190,7 @@
 
                         property.SetValue(
                             parameterValue,
-                            Convert.ChangeType(propertyValue,property.PropertyType));
+                            Convert.ChangeType(propertyValue, property.PropertyType));
                     }
 
                     parameterValues[i] = parameterValue;
@@ -202,7 +202,6 @@
 
         private static string GetValue(this HttpRequest request, string name)
             => request.Query.GetValueOrDefault(name) ??
-            request.Form.GetValueOrDefault(name);
-
+                request.Form.GetValueOrDefault(name);
     }
 }

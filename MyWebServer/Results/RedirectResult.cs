@@ -2,10 +2,10 @@
 {
     using MyWebServer.Http;
 
-    public class RedirectResult:ActionResult
+    public class RedirectResult : ActionResult
     {
-        public RedirectResult(HttpResponse response,string location)
-            :base(response)
+        public RedirectResult(HttpResponse response, string location)
+            : base(response)
         {
             this.StatusCode = HttpStatusCode.Found;
 

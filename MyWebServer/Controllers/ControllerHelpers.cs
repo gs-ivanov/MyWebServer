@@ -1,6 +1,7 @@
 ﻿namespace MyWebServer.Controllers
 {
     using System;
+
     public static class ControllerHelpers
     {
         public static string GetControllerName(this Type type)

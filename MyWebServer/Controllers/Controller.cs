@@ -9,7 +9,7 @@
     public abstract class Controller
     {
         public const string UserSessionKey = "AuthenticatedUserId";
-       
+
         private UserIdentity userIdentity;
         private IViewEngine viewEngine;
 
@@ -36,7 +36,7 @@
         {
             get
             {
-                if (this.viewEngine==null)
+                if (this.viewEngine == null)
                 {
                     this.viewEngine = this.Request.Services.Get<IViewEngine>()
                         ?? new ParserViewEngine();
@@ -71,10 +71,10 @@
             => this.GetViewResult(viewName, null);
 
         protected ActionResult View(string viewName, object model)
-            => this.GetViewResult(viewName, null);
+            => this.GetViewResult(viewName, model);
 
         protected ActionResult View(object model, [CallerMemberName] string viewName = "")
-             => this.GetViewResult(viewName, model);
+            => this.GetViewResult(viewName, model);
 
         private ActionResult GetViewResult(string viewName, object model)
             => new ViewResult(this.Response, this.ViewEngine, viewName, this.GetType().GetControllerName(), model, this.User.Id);

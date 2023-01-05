@@ -12,7 +12,7 @@
             => this.form = new(StringComparer.InvariantCultureIgnoreCase);
 
         public string this[string name]
-            =>this.form[name];
+            => this.form[name];
 
         public void Add(string name, string value)
             => this.form[name] = value;

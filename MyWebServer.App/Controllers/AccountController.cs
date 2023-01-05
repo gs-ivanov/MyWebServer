@@ -39,8 +39,8 @@
             {
                 return Text($"Authenticated user: {this.User.Id}");
             }
-          
-            return Text($"User is not authenticated!");
+
+            return Text("User is not authenticated!");
         }
 
         [Authorize]
@@ -55,19 +55,19 @@
             {
                 var cookie = this.Request.Cookies[cookieName];
 
-                return Text($"Cookies already exists - {cookie}!");
+                return Text($"Cookies already exist - {cookie}!");
             }
 
             this.Response.Cookies.Add(cookieName, "My-Value");
             this.Response.Cookies.Add("My-Second-Cookie", "My-Second-Value");
 
-            return Text($"Cookies set!");
+            return Text("Cookies set!");
         }
+
         public HttpResponse SessionCheck()
         {
             const string currentDateKey = "CurrentDate";
 
-          
             if (this.Request.Session.Contains(currentDateKey))
             {
                 var currentDate = this.Request.Session[currentDateKey];

@@ -1,6 +1,7 @@
 ﻿namespace MyWebServer.Http
 {
     using MyWebServer.Common;
+
     public class HttpCookie
     {
         public HttpCookie(string name, string value)
@@ -12,12 +13,11 @@
             this.Value = value;
         }
 
-
         public string Name { get; init; }
 
         public string Value { get; private set; }
 
         public override string ToString()
-        => $"{this.Name}={this.Value}";
+            => $"{this.Name}={this.Value}";
     }
 }

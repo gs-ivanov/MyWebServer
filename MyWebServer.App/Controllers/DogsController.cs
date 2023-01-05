@@ -1,4 +1,5 @@
-﻿namespace MyWebServer.App.Controllers
+﻿
+namespace MyWebServer.App.Controllers
 {
     using MyWebServer.App.Models.Animals;
     using MyWebServer.Controllers;
@@ -6,11 +7,6 @@
 
     public class DogsController : Controller
     {
-        //public DogsController(HttpRequest request)
-        //    : base(request)
-        //{
-        //}
-
         [HttpGet]
         public HttpResponse Create() => View();
 

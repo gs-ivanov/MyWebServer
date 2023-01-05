@@ -12,7 +12,7 @@
         public CatsController(IData data)
             => this.data = data;
 
-       public HttpResponse All()
+        public HttpResponse All()
         {
             var cats = this.data
                 .Cats
@@ -27,14 +27,14 @@
                 .Cats
                 .ToList();
 
-            var result = "<h1>All cats in the system from AllHtml:</h1>";
+            var result = "<h1>All cats in the system:</h1>";
 
             result += "<ul>";
 
             foreach (var cat in cats)
             {
-                result +="<li>";
-                result +=cat.Name+"-"+cat.Age;
+                result += "<li>";
+                result += cat.Name + "-" + cat.Age;
                 result += "</li>";
             }
 
@@ -43,11 +43,11 @@
             return Html(result);
         }
 
-                [HttpGet]
+        [HttpGet]
         public HttpResponse Create() => View();
 
         [HttpPost]
-        public HttpResponse Save(string name,int age)
+        public HttpResponse Save(string name, int age)
             => Text($"{name} - {age}");
     }
 }

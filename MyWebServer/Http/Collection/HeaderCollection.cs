@@ -23,7 +23,7 @@
             => this.headers.ContainsKey(name);
 
         public IEnumerator<HttpHeader> GetEnumerator()
-        => this.headers.Values.GetEnumerator();
+            => this.headers.Values.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
             => this.GetEnumerator();

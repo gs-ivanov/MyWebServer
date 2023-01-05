@@ -8,23 +8,23 @@
     {
         private readonly Dictionary<string, string> query;
 
-                public QueryCollection()
-            => this.query =new(StringComparer.InvariantCultureIgnoreCase);        //.ToDictionary(p=>p.Key.TpLower(),p=>p.Value
+        public QueryCollection()
+            => this.query = new(StringComparer.InvariantCultureIgnoreCase);
 
         public string this[string name]
-            =>this.query[name];   //value had tolower()
+            => this.query[name];
 
-        public void add(string name, string value)
+        public void Add(string name, string value)
             => this.query[name] = value;
 
         public bool Contains(string name)
             => this.query.ContainsKey(name);
 
         public string GetValueOrDefault(string key)
-            => this.query.GetValueOrDefault(key);
+             => this.query.GetValueOrDefault(key);
 
         public IEnumerator<string> GetEnumerator()
-             => query.Values.GetEnumerator();
+            => query.Values.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator()
             => this.GetEnumerator();

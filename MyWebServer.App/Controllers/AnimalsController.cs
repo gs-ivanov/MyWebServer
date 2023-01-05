@@ -9,18 +9,13 @@
         public HttpResponse Cats()
         {
             const string nameKey = "Name";
-            const string breedKey = "Breed";
             const string ageKey = "Age";
 
             var query = this.Request.Query;
 
             var catName = query.Contains(nameKey)
                 ? query[nameKey]
-                : "this cats";
-
-            var catBreed = query.Contains(breedKey)
-                ? query[breedKey]
-                : "Sha";
+                : "the cats";
 
             var catAge = query.Contains(ageKey)
                 ? int.Parse(query[ageKey])
@@ -29,12 +24,10 @@
             var viewModel = new CatViewModel
             {
                 Name = catName,
-                Breed = catBreed,
                 Age = catAge
             };
 
             return View(viewModel);
-
         }
 
         public HttpResponse Dogs() => View(new DogViewModel
@@ -45,8 +38,7 @@
         });
 
         public HttpResponse Bunnies() => View("Rabbits");
+
         public HttpResponse Turtles() => View("Animals/Wild/Turtles");
-
-
     }
 }

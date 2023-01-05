@@ -9,17 +9,16 @@
     {
         public HttpResponse Index() => Text("Hello from Ivo!");
 
-        public HttpResponse LocalRedirect() =>Redirect("Animals/Cats");
+        public HttpResponse LocalRedirect() => Redirect("/Animals/Cats");
 
         public HttpResponse ToSoftUni() => Redirect("https://softuni.bg");
 
         public HttpResponse StaticFiles() => View();
 
         public HttpResponse HtmlView() => View(new CatViewModel { Name = "Sharo", Age = 5 });
-        
-        public HttpResponse MissinglView() => View();
+
+        public HttpResponse MissingView() => View();
 
         public HttpResponse Error() => throw new InvalidOperationException("Invalid action!");
-
     }
 }

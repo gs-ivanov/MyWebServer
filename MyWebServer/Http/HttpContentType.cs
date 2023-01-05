@@ -12,7 +12,7 @@
                 "css" => "text/css",
                 "js" => "application/javascript",
                 "jpg" or "jpeg" => "image/jpeg",
-                "png" => "image/jpeg",
+                "png" => "image/png",
                 _ => PlainText
             };
     }

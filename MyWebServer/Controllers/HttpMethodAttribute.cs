@@ -1,7 +1,7 @@
 ﻿namespace MyWebServer.Controllers
 {
-    using MyWebServer.Http;
     using System;
+    using MyWebServer.Http;
 
     [AttributeUsage(AttributeTargets.Method)]
     public abstract class HttpMethodAttribute : Attribute
