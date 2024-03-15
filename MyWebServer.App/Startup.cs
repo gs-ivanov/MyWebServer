@@ -20,6 +20,5 @@
                     .Add<IData, MyDbContext>())
                 .Start();
 
-        // Check from MyWebServer - again
     }
 }
